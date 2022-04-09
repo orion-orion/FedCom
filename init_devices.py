@@ -4,7 +4,7 @@ Version: 1.0
 Author: ZhangHongYu
 Date: 2022-03-13 21:16:56
 LastEditors: ZhangHongYu
-LastEditTime: 2022-04-01 19:54:13
+LastEditTime: 2022-04-06 20:56:29
 '''
 from models import ConvNet, MobileNet, NextCharacterLSTM
 from utils.data_utils import rotate_data
@@ -52,7 +52,7 @@ def init_clients_and_server(args, dataset, client_train_idcs, client_test_idcs, 
                 
         if args.method == "Clustered":
             server = ClusteredServer(lambda : ConvNet(input_size=input_sz, channels=n_channels, num_classes=num_cls))
-        elif args.method == "My":
+        elif args.method == "My" or args.method == "Overlap":
             server = CommunityServer(lambda : ConvNet(input_size=input_sz, channels=n_channels, num_classes=num_cls))
         else:
             server = Server(lambda : ConvNet(input_size=input_sz, channels=n_channels, num_classes=num_cls))
@@ -72,7 +72,7 @@ def init_clients_and_server(args, dataset, client_train_idcs, client_test_idcs, 
 
         if args.method == "Clustered":
             server = ClusteredServer(lambda : NextCharacterLSTM())
-        elif args.method == "My":
+        elif args.method == "My" or args.method == "Overlap":
             server = CommunityServer(lambda : NextCharacterLSTM())
         else:
             server = Server(lambda : NextCharacterLSTM())

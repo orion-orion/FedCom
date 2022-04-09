@@ -2,21 +2,17 @@
 Descripttion: 
 Version: 1.0
 Author: ZhangHongYu
-Date: 2022-03-26 20:08:09
+Date: 2022-03-26 20:06:12
 LastEditors: ZhangHongYu
-LastEditTime: 2022-04-09 17:16:17
+LastEditTime: 2022-04-01 19:53:30
 '''
-from fl_devices import Server, weighted_reduce_add_average, flatten
+from fl_devices import Server, flatten, weighted_reduce_add_average
 import torch
-from sklearn.cluster import AgglomerativeClustering
-import numpy as np
 
-class ClusteredServer(Server):
+class CommunityServer(Server):
     def __init__(self, model_fn):
         super().__init__(model_fn)
-        self.cluster_cache = []
-        self.r_cache = []
-        
+    
     def compute_pairwise_similarities(self, clients):
         return pairwise_angles([client.dW for client in clients])
         
@@ -30,20 +26,6 @@ class ClusteredServer(Server):
         for cluster_id, cluster in enumerate(client_clusters):
             weighted_reduce_add_average(targets=[client.W for client in cluster], 
                                sources=[(client.dW, client.weight/weights_sum[cluster_id]) for client in cluster])
-
-     # used for cluster_fl
-    def cluster_clients(self, S):
-        # Agglomerative 凝聚地
-        clustering = AgglomerativeClustering(affinity="precomputed", linkage="complete").fit(-S)
-
-        c1 = np.argwhere(clustering.labels_ == 0).flatten() 
-        c2 = np.argwhere(clustering.labels_ == 1).flatten() 
-        return c1, c2
-    
-    def cache_cluster(self, cluster_idcs, c_round):
-        self.cluster_cache.append(cluster_idcs)
-        self.r_cache.append(c_round)
-    
 
 # 逐(i,j)对计算参数相似度
 # 这里的sources为所有client的参数的变化量delta_W组成的列表

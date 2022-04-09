@@ -4,12 +4,12 @@ Version: 1.0
 Author: ZhangHongYu
 Date: 2022-02-17 11:20:36
 LastEditors: ZhangHongYu
-LastEditTime: 2022-03-29 16:46:57
+LastEditTime: 2022-04-09 18:36:29
 '''
-from utils.plots import display_train_stats
 import numpy as np
 from tqdm import tqdm
-            
+from utils.plots import display_train_stats, clear_graph_pic_dir
+
 def clustered_fl(args, clients, server, cfl_stats):
 
     EPS_1 = 0.4
@@ -19,9 +19,11 @@ def clustered_fl(args, clients, server, cfl_stats):
     client_clusters = [[clients[i] for i in idcs] for idcs in cluster_indices]
 
     similarities = server.compute_pairwise_similarities(clients)
+    server.cache_cluster(cluster_indices, 0)
     #print(similarities)
     # 进行n_rounds轮迭代
     acc_clients = []
+    clear_graph_pic_dir()
     pbar = tqdm(total=args.n_rounds)
     for c_round in range(1, args.n_rounds+1):
         # print(cluster_indices)
@@ -61,14 +63,19 @@ def clustered_fl(args, clients, server, cfl_stats):
                 c1, c2 = server.cluster_clients(similarities[idc][:,idc]) 
                 # print("已进行新的簇分裂!!!")
                 cluster_indices_new += [list(np.array(idc)[c1]), list(np.array(idc)[c2])]
-
                 cfl_stats.log({"split" : c_round})
+                # similarities = np.where(similarities<0, 0, 1)
+                # np.fill_diagonal(similarities, 0)
+                # draw_communities(similarities, cluster_indices_new, c_round)
             else:  
                 # 这里是将当前簇中client的id嵌套在一 d个列表里再合并进去
                 # [[1, 2]] + [[5, 6]] = [[1, 2], [5, 6]]
                 # 相当于不再分裂，idc簇仍然是idc簇
                 cluster_indices_new += [idc]
                 
+        if len(cluster_indices_new) > len(cluster_indices):
+            server.cache_cluster(cluster_indices_new, c_round)
+            
         cluster_indices = cluster_indices_new
 
         client_clusters = [[clients[i] for i in idcs] for idcs in cluster_indices]

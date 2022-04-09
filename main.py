@@ -5,7 +5,7 @@ Version: 1.0
 Author: ZhangHongYu
 Date: 2021-12-24 14:33:14
 LastEditors: ZhangHongYu
-LastEditTime: 2022-04-01 20:01:36
+LastEditTime: 2022-04-09 19:23:22
 '''
 import torch
 import pandas as pd
@@ -20,6 +20,7 @@ from init_devices import init_clients_and_server
 from init_datasets import load_dataset
 import argparse
 import os
+from utils.plots import draw_result_table
 
 
 def parse_args():
@@ -39,7 +40,7 @@ def parse_args():
     parser.add_argument(
         'method',
         help = "the method to be used;"
-               " possible are `My`,`Clustered`, `FedAvg`, `Ditto`, `Local`",
+               " possible are `My`,`Clustered`, `FedAvg`, `Ditto`, `Local`, 'Overlap'",
         type=str,
         default='My'
     )
@@ -130,28 +131,15 @@ def run_experiment(args, clients, server):
     elif args.method == "Local":
         local_fl(args, clients, server, cfl_stats)
     else:
-        raise IOError("possible are `My`,`Clustered`, `FedAvg`, `Ditto`, `Local`")
+        raise IOError("possible are `My`,`Clustered`, `FedAvg`, `Ditto`, `Local`, `Overlap`")
+    # elif args.method == "Overlap":
+    #     overlap_fl(args, clients, server, cfl_stats)
 
-    # The training process resulted in multiple models for every client: A Federated Learning base model 
-    # as well as more specialized models for the different clusters.  We can now compare their accuracies
-    # on the clients' validation sets, and assign each client the model which performed best.
-    results = np.zeros([len(clients), len(server.model_cache)])
-    for i, (idcs, W, accs) in enumerate(server.model_cache):
-        results[idcs, i] = np.array(accs)
 
-    frame = pd.DataFrame(results, columns=["FL Model"]+["Model {}".format(i) 
-                                                        for i in range(results.shape[1]-1)],
-                index = ["Client {}".format(i) for i in range(results.shape[0])])
+    draw_result_table(args, clients, server)
 
-    def highlight_max(s):
-        is_max = s == s.max()
-        return ['background-color: yellow' if v else '' for v in is_max]
-    frame = frame.T.style.apply(highlight_max)
-    path = "result_pic"
-    if not os.path.exists(path):
-        os.makedirs(path)
-    frame.to_html(os.path.join(path, "specialized_acc.html"))
-    # As we can see, clustering improoved the accuracy for all clients by about 10%.
+    
+    
 
 def main():
     args = parse_args()
