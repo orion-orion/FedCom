@@ -4,7 +4,7 @@ Version: 1.0
 Author: ZhangHongYu
 Date: 2021-12-23 18:53:12
 LastEditors: ZhangHongYu
-LastEditTime: 2022-04-09 19:17:36
+LastEditTime: 2022-04-25 15:13:26
 '''
 import numpy as np
 import matplotlib.pyplot as plt
@@ -194,7 +194,7 @@ def _position_nodes(G, partition, **kwargs):
 
 # Adapted from: https://stackoverflow.com/questions/43541376/how-to-draw-communities-with-networkx
 def community_layout(G, partition):
-    pos_communities = _position_communities(G, partition, scale=10.0)  # 10.0
+    pos_communities = _position_communities(G, partition, scale=7.0)  # 10.0
     pos_nodes = _position_nodes(G, partition, scale=2.0) # 2.0
 
     # Combine positions
@@ -217,11 +217,24 @@ def _node_coordinates(nodes):
 
 
 def _convex_hull_vertices(node_coordinates, community):
+    # community: [0, 1, 2] 说明这个社区只有0,1,2好节点
+    # node_coordinates: shape(10, 2)，有正有负的坐标
+    
     points = np.array(node_coordinates[list(community)])
-    hull = ConvexHull(points)
+    # points: shape(3,2) 从 node_coordinates 选出来的3个点
 
+    hull = ConvexHull(points)
+    # array([3.10922335, 2.6718853 ])
+    # array([6.57332497, 2.54976051])
+    # array([4.94703733, 5.61082291])
+    
     x, y = points[hull.vertices, 0], points[hull.vertices, 1]
     vertices = np.column_stack((x, y))
+    # vertices: shape(3,2)
+    # array([3.10922335, 2.6718853 ])
+    # array([6.57332497, 2.54976051])
+    # array([4.94703733, 5.61082291])
+
 
     return vertices
 
@@ -274,6 +287,12 @@ def _scale_convex_hull(vertices, offset):
 
 def _community_patch(vertices):
     vertices = _scale_convex_hull(vertices, 1) # TODO: Make offset dynamic
+    # vertices: shape(3, 2)
+    # vertices.T 两个维度是一样的
+    
+    # if vertices.shape[0] == 3:
+    vertices = np.concatenate([vertices, vertices[-1].reshape(1, -1)], axis=0)
+    
     tck, u = splprep(vertices.T, u=None, s=0.0, per=1, k=3)
     u_new = np.linspace(u.min(), u.max(), 1000)
     x_new, y_new = splev(u_new, tck, der=0)
@@ -325,7 +344,7 @@ def draw_communities(adj_matrix, communities, c_round, dark=False, filename=None
     ax.axis("off")
 
     node_size = 10200 / G.number_of_nodes()
-    linewidths = 34 / G.number_of_nodes()
+    linewidths = 34 / G.number_of_nodes() #34
 
     pos = community_layout(G, partition)
     nodes = nx.draw_networkx_nodes(
@@ -334,7 +353,8 @@ def draw_communities(adj_matrix, communities, c_round, dark=False, filename=None
         node_color=partition,
         linewidths=linewidths,
         cmap=cm.jet,
-        ax=ax
+        ax=ax,
+        node_size=node_size
     )
     nodes.set_edgecolor("w")
     edges = nx.draw_networkx_edges(
@@ -344,7 +364,7 @@ def draw_communities(adj_matrix, communities, c_round, dark=False, filename=None
         width=linewidths,
         ax=ax
     )
-    nx.draw_networkx_labels(G, pos=pos, ax=ax, font_color="white")
+    nx.draw_networkx_labels(G, pos=pos, ax=ax, font_color="white", font_size=node_size*0.02)
     draw_community_patches(nodes, communities, ax)
 
 
