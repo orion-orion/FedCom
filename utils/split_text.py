@@ -185,8 +185,6 @@ def get_train_test_by_character(plays, test_fraction=0.2):
 
 def write_data_by_character(examples, output_directory):
     """Writes a collection of data files by play & character."""
-    if not os.path.exists(output_directory):
-        os.makedirs(output_directory)
     for character_name, sound_bites in examples.items():
         filename = os.path.join(output_directory, character_name + '.txt')
         with open(filename, 'w') as output:
