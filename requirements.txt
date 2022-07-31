@@ -1,0 +1,10 @@
+numpy==1.19.5
+scipy  
+pandas
+matplotlib
+joblib
+tqdm
+networkx
+scikit-learn==1.1.0
+pytorch==1.8.0
+torchvision==0.9.0
