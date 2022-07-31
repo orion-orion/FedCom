@@ -11,7 +11,6 @@ import warnings
 
 import networkx as nx
 import numpy as np
-from sklearn import cluster
 
 from .community_status import Status
 

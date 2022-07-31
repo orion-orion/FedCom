@@ -11,7 +11,6 @@ import networkx as nx
 from .graph_cluster.community_louvain import best_partition, modularity
 from utils.plots import display_train_stats
 from utils.plots import display_train_stats, clear_graph_pic_dir, draw_communities 
-import copy
 from tqdm import tqdm
 import numpy as np
 

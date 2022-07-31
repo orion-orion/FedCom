@@ -9,17 +9,12 @@ LastEditTime: 2022-07-08 22:15:19
 from genericpath import exists
 import os
 
-from cvxpy import entr
 from utils.split_text import split_into_plays, get_train_test_by_character, write_data_by_character, train_test_split
 from utils.download import download_url, check_integrity
 import re
-from typing import Any, Callable, List, Optional
+from typing import Any, List
 import time
-import hashlib
 import json
-import urllib
-import urllib.request
-import urllib.error
 import torch
 import zipfile
 import random

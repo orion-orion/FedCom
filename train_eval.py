@@ -7,7 +7,6 @@ LastEditors: ZhangHongYu
 LastEditTime: 2022-03-26 19:52:39
 '''
 import torch
-from torch.utils.data import DataLoader
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
 

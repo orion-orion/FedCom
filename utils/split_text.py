@@ -26,11 +26,8 @@ Disclaimer: This is not an official Google product.
 """
 
 import collections
-import json
 import os
-import random
 import re
-import sys
 RANDOM_SEED = 1234
 # Regular expression to capture an actors name, and line continuation
 CHARACTER_RE = re.compile(r'^  ([a-zA-Z][a-zA-Z ]*)\. (.*)')

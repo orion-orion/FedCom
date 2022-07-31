@@ -8,7 +8,6 @@ LastEditors: ZhangHongYu
 LastEditTime: 2022-04-09 19:23:22
 '''
 import torch
-import pandas as pd
 import numpy as np
 from utils.plots import ExperimentLogger
 from method.clustered.clustered import clustered_fl
@@ -19,7 +18,6 @@ from method.local.local import local_fl
 from init_devices import init_clients_and_server
 from init_datasets import load_dataset
 import argparse
-import os
 from utils.plots import draw_result_table
 
 

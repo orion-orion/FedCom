@@ -14,11 +14,9 @@ try:
     from torchvision.version import __version__ as __vision_version__   # noqa: F401
 except ImportError:
     __vision_version__ = "undefined"
-import numpy as np
-from torch.utils.data import Dataset
 import os
 import torch
-from typing import Any, Callable, List, Optional
+from typing import Any, Optional
 import hashlib
 
 USER_AGENT = os.environ.get(
