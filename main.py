@@ -29,14 +29,14 @@ def parse_args():
     """
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
-        'dataset',
+        '--dataset',
         help="name of dataset;"
         " possible are `EMNIST`, `FashionMNIST`, `CIFAR10`，`CIFAR100`, `Shakespeare`",
         type=str,
         default='CIFAR10'
     )
     parser.add_argument(
-        'method',
+        '--method',
         help = "the method to be used;"
                " possible are `My`,`Clustered`, `FedAvg`, `Ditto`, `Local`, 'Overlap'",
         type=str,
