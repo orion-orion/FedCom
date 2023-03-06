@@ -6,11 +6,20 @@
  * @LastEditors: ZhangHongYu
  * @LastEditTime: 2022-04-01 20:27:20
 -->
-# 基于社区检测的多任务聚类联邦学习
-[![Open Source Love](https://badges.frapsoft.com/os/v2/open-source.svg?v=103)](https://github.com/orion-orion/Community-Detection-MTFL) [![License](https://img.shields.io/github/license/orion-orion/Community-Detection-MTFL)](https://github.com/orion-orion/Community-Detection-MTFL/LICENSE) [![](https://img.shields.io/github/stars/orion-orion/Community-Detection-MTFL?style=social)](https://github.com/orion-orion/Community-Detection-MTFL) [![](https://img.shields.io/github/issues/orion-orion/Community-Detection-MTFL)](https://github.com/orion-orion/Community-Detection-MTFL/issues)
+<p align="center">
+<img src="paper_pic/logo.png" width="600" height="200">
+</p>
+
+<div align="center">
+
+# FedCom: 基于社区检测的多任务聚类联邦学习
+[![Open Source Love](https://badges.frapsoft.com/os/v2/open-source.svg?v=103)](https://github.com/orion-orion/FedCom) [![License](https://img.shields.io/github/license/orion-orion/FedCom)](https://github.com/orion-orion/FedCom/blob/master/LICENSE) [![](https://img.shields.io/github/stars/orion-orion/FedCom?style=social)](https://github.com/orion-orion/FedCom) 
+<br/>
+[![](https://img.shields.io/github/directory-file-count/orion-orion/FedCom)](https://github.com/orion-orion/FedCom) [![](https://img.shields.io/github/languages/code-size/orion-orion/FedCom)](https://github.com/orion-orion/FedCom)
+</div>
 
 ## 1 简介
-本项目为SWPU2022届本科毕业设计《基于社区检测的多任务聚类联邦学习》。本研究提出了一种多任务聚类联邦学习的新方法，该方法的特点是**基于社区检测来进行聚类簇的动态划分**。本研究的方法规避了聚类簇由人工指定的弊端，从而在算法后期对前期错误划分进行动态修正，缓解了因前期划分失误带来的负面影响。
+[FedCom](https://github.com/orion-orion/FedCom)为SWPU2022届本科毕业设计《基于社区检测的多任务聚类联邦学习》。本研究提出了一种多任务聚类联邦学习（clustered federated learning, CFL）的新方法，该方法的特点是**基于社区检测（community detection）来进行聚类簇的动态划分**。本研究的方法规避了聚类簇由人工指定的弊端，从而在算法后期对前期错误划分进行动态修正，缓解了因前期划分失误带来的负面影响。
 
 在三个不同数据集上进行的实验表明，相比本文对比的其它几个联邦学习方法，本文提出的基于动态划分的多任务聚类联邦学习方法在大多数情况下表现更好。在大多数情况下，本文所提出的算法划分更加准确，达到的准确率更高，收敛速度更快。其中于本文的算法具有动态调整聚簇的特性，所以即使在最初的几轮迭代中划分错误，也能在后面的迭代中对错误的聚簇划分进行调整，从而取得更佳的精度表现。
 
@@ -133,6 +142,7 @@ $$
 ```
 pip install -r requirements.txt
 ```
+这里尤其需要注意 Matplotlib 版本需要满足<=3.4.3，否则社区动态划分的可视化部分会报错。
 
 ### 使用方法
 运行:
@@ -152,6 +162,7 @@ python main.py \
 参数`n_clients`用于调整客户端个数;
 参数`n_clusters`用于初始化数据分布中潜在的聚类簇个数(潜在的$k$值)。
 
+运行完毕后，可于`result_pic`目录下查看实验的动态运行结果，其中`result_pic/cluster_log.html`记录每轮迭代的聚簇划分情况，`result_pic/result.png`记录在测试集上的准确率（所有client在本地测试后平均）随迭代轮数的变化曲线，`result_pic/pecialized_acc.html`为更详细的每个client在每轮迭代中的测试集评估结果。此外，你还可以于`result_pic/graph`目录下查看社区动态划分的可视化结果。
 
 
 
