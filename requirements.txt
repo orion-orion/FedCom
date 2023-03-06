@@ -1,7 +1,7 @@
 numpy==1.19.5
 scipy  
 pandas
-matplotlib
+matplotlib==3.4.3
 joblib
 tqdm
 networkx
