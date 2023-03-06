@@ -138,6 +138,8 @@ def clear_graph_pic_dir():
         os.makedirs(path)
     file_list = os.listdir(path)
     for f in file_list:
+        if f == ".gitkeep":
+            continue
         file_path = os.path.join(path, f)
         if os.path.isfile(file_path):
             os.remove(file_path)
